@@ -1,0 +1,10 @@
+name: sxsw
+channels:
+  - default
+  - pytorch
+  - fastai
+dependencies:
+  - python==3.6.8
+  - pytorch
+  - torchvision
+  - fastai==1.0.34
