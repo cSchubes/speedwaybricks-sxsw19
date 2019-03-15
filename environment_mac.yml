@@ -8,3 +8,6 @@ dependencies:
   - pytorch
   - torchvision
   - fastai==1.0.34
+  - numpy
+  - opencv
+  - zmq
