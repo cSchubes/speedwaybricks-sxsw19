@@ -1,8 +1,8 @@
 import sys
 import time
 from timeit import default_timer as timer
-# from subapi import rover
-import rover
+from subapi import rover
+# import rover
 from classifier import Classify
 
 ARTIFACT_PATH='./models'
