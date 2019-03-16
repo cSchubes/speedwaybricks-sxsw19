@@ -5,6 +5,7 @@ from timeit import default_timer as timer
 from subapi import rover as RoverAPI
 # custom imports
 from rover_lib import *
+from parameters import deadzone_params
 from classifier import Classify
 from deadzone import GradientDescent
 
@@ -36,7 +37,7 @@ def main(model='production.pkl'):
     # setup
     rover = RoverAPI()
     classify = Classify(ARTIFACT_PATH, model)
-    deadZoneHeading = None 
+    DeadZoneController = None 
 
     while True:
         # run this guy at 1Hz
@@ -54,19 +55,24 @@ def main(model='production.pkl'):
         
         ## WAYPOINT 2 WAYPOINT ##
         if not rover.isDeadZone():
+            # check for leaving dead zone
+            if DeadZoneController is not None:
+                DeadZoneController = None
+            
             if not rover.isOverride():
-                    
                 waypoint = rover.getWaypoint()
                 print(waypoint)
                 ### STUFF ###
                     
         ## INSIDE DEADZONE ##
         else:
-            if deadZoneHeading is None:
-                deadZoneHeading = GradientDescent(...)
-                # rover.setWaypoint(-1, -1, -1)
             signal_strength = rover.getSignalStrength()
-            heading = deadZoneHeading.get_next_step(STATE, signal_strength)
+            # check for entering deadzone
+            if DeadZoneController is None:
+                DeadZoneController = GradientDescent(signal_strength, 
+                                                    STATE, deadzone_params)
+                # rover.setWaypoint(-1, -1, -1)
+            heading = DeadZoneController.get_next_step(STATE, signal_strength)
             ## STUFF
             
         # confirm we are running at 1Hz
