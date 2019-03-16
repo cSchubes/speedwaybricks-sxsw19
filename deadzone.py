@@ -21,16 +21,21 @@ class GradientDescent:
         self.signal_filter = LowPassFilter(params[4])
         self.heading_filter = LowPassFilter(params[5])
 
+        self.signal_filter.reset(first_signal)
+        self.heading_filter.reset(first_state.heading)
+
         self.starting_counter = 0
 
     def get_next_step(self, new_robot_pos, new_signal):
 
-        if(self.starting_counter < 3):
-            self.starting_counter += 1
-            return goal_heading
-        
         new_signal = self.signal_filter.filter(new_signal)
         new_heading = self.heading_filter.filter(new_robot_pos.heading)
+
+        if(self.starting_counter < 3):
+            self.starting_counter += 1
+            self.prev_signal = new_signal
+            self.prev_heading = new_heading
+            return goal_heading
         
         ds = new_signal - self.prev_signal
         dh = new_heading - self.prev_heading
