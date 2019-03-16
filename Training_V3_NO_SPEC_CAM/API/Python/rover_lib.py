@@ -1,3 +1,5 @@
+import math
+
 class location:
     x = float()
     y = float()

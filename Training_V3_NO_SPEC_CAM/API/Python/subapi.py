@@ -116,7 +116,7 @@ if __name__=="__main__":
     rover_obj = rover()
     i=0
     while True:
-        passcx  r54eee
+        pass
         # print("Location ", rover_obj.getLocation())
         # print("RPY ", rover_obj.getRoll(), rover_obj.getPitch(), rover_obj.getYaw())
         # print("LIDARS ", rover_obj.getLidars())
