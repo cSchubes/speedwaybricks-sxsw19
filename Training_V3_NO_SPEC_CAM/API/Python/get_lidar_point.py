@@ -41,3 +41,22 @@ def find_lidar_point(robot_transform, lidar_yaw, lidar_dist):
     lidar_point = [lidar_transform[0,3], lidar_transform[1,3], lidar_transform[2,3]]
 
     return lidar_point
+
+class LidarTracker:
+    prev_dist = float()
+    new_dist = float()
+
+    def __init__(self):
+        self.prev_dist = 0
+
+    def lidar_hit_object(self, new_data):
+        # new_data is the newest lidar data (distance)
+        # returns true if we want this new data to count (object, ground)
+        # returns false if data is -1, or if its the same as last time
+
+        if((abs(new_data - self.prev_dist) <= 0.001) or (new_data == -1)):
+            return False
+        else:
+            # valid point, save this distance and get out
+            self.prev_dist = new_data
+            return True
