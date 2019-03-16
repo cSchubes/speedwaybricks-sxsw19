@@ -6,19 +6,20 @@ class GradientDescent:
 
     prev_pos = robot_state(poser(0,0,0,0,0,0))
     
-    def __init__(self, alpha, beta, max_turn, gamma, first_signal, first_state, lowpass_signal_coeff, lowpass_heading_coeff):
-        self.alpha = alpha
-        self.max_turn = max_turn
-        self.beta = beta
-        self.gamma = gamma
+    def __init__(self, first_signal, first_state, params):
+        # Call with deadzone_params, set in parameters.py file
+        self.alpha = params[0]
+        self.max_turn = params[3]
+        self.beta = params[1]
+        self.gamma = params[2]
 
         self.prev_signal = first_signal
         self.this_signal = first_signal
         self.prev_heading = first_state.heading
         self.goal_heading = first_state.heading
 
-        self.signal_filter = LowPassFilter(lowpass_signal_coeff)
-        self.heading_filter = LowPassFilter(lowpass_heading_coeff)
+        self.signal_filter = LowPassFilter(params[4])
+        self.heading_filter = LowPassFilter(params[5])
 
         self.starting_counter = 0
 
