@@ -6,9 +6,9 @@ def find_robot_transform(robot_pos, robot_or):
     # robot_or = [roll, pitch, yaw] in degrees in globabl framw
     # returns a 4x4 array - the homogenous transformation matrix
 
-    roll = math.radians(robot_or[0])
-    pitch = math.radians(robot_or[1])
-    yaw = math.radians(robot_or[2])
+    roll = math.radians(robot_or.r)
+    pitch = math.radians(robot_or.p)
+    yaw = math.radians(robot_or.y)
 
     R = numpy.array([[math.cos(yaw)*math.cos(pitch), math.cos(yaw)*math.sin(pitch)*math.sin(roll) - math.sin(yaw)*math.cos(roll), math.cos(yaw)*math.sin(pitch)*math.cos(roll) + math.sin(yaw)*math.sin(roll), robot_pos[0]],
                      [math.sin(yaw)*math.cos(pitch), math.sin(yaw)*math.sin(pitch)*math.sin(roll) + math.cos(yaw)*math.cos(roll), math.sin(yaw)*math.sin(pitch)*math.cos(roll) - math.cos(yaw)*math.sin(roll), robot_pos[1]],
