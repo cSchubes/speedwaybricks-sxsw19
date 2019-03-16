@@ -40,6 +40,13 @@ class GradientDescent:
         ds = new_signal - self.prev_signal
         dh = new_heading - self.prev_heading
 
+        if(ds < self.alpha):
+            ds = self.alpha
+            print("Below signal change threshold, setting turn to max")
+        elif(ds > self.beta):
+            ds = self.beta
+            print("Above signal change threshold, setting turn to 0")
+
         heading_step = numpy.sign(ds) * self.max_turn * abs((self.beta - ds)/(self.beta - self.alpha)) * self.gamma * abs(dh)
         goal_heading += heading_step
 
