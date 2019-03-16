@@ -4,6 +4,7 @@
 named_assets.zip
 named_assets/
 adjusted_labels/
+.ipynb_checkpoints/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
