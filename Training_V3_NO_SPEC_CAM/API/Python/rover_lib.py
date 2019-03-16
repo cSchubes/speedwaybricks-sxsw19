@@ -13,7 +13,7 @@ class location:
         self.y = loc_tuple[1]
         self.z = loc_tuple[2]
 
-class acceleration:
+class acceleration_vect:
     x = float()
     y = float()
     z = float()
@@ -74,7 +74,7 @@ class poser:
         self.position.setLoc(x, y, z)
         self.orientation.setRot(roll, pitch, yaw)
 
-    def setPoseTup(self, loc, roll, pitch, yaw)
+    def setPoseTup(self, loc, roll, pitch, yaw):
         self.position.setLocTup(loc)
         self.orientation.setRot(roll, pitch, yaw)
 
@@ -86,7 +86,7 @@ class robot_command:
     start = bool()
 
 class robot_state:
-    pose = poser()
+    pose = poser(0,0,0,0,0,0)
     velocity = velocity_vect()
     acceleration = acceleration_vect()
     heading = float()
@@ -99,6 +99,6 @@ def relative_heading(loc1, loc2):
     heading = math.atan2((loc2.y - loc1.y), (loc2.x - loc1.x)) * 180 / math.pi
     return heading
 
-def xy_distance(loc1, loc2)
+def xy_distance(loc1, loc2):
     distance = math.sqrt((loc2.x - loc1.x) * (loc2.x - loc1.x) + (loc2.y - loc1.y) * (loc2.y - loc1.y))
     return distance
