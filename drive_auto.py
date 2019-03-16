@@ -15,17 +15,16 @@ def get_desired_setpts(lidarMap, robot_pos, waypt):
 
     for x in range(len(lidarMap)):
         pt = lidarMap[x]
-        print('test')
         euc_dist = math.sqrt((pt[0] - robot_pos.x)**2 + (pt[1] - robot_pos.y)**2 + (pt[2] - robot_pos.z)**2)
-        print(euc_dist)
+        print('Euc Dist to Pt', euc_dist)
         if euc_dist <= max_oa_rng:
             # find v_i of point
             v = c * (1/euc_dist**2)
+            v_des_obs = numpy.add([v*(pt[1]-robot_pos.y) , v*(pt[0]-robot_pos.x)], v_des_obs)
         else:
+            # throw out point
+            lidarMap.remove(pt)
             v = 0
-
-        add = [v*(pt[1]-robot_pos.y) , v*(pt[0]-robot_pos.x)]
-        v_des_obs = numpy.add([v*(pt[1]-robot_pos.y) , v*(pt[0]-robot_pos.x)], v_des_obs)
 
     v_des = numpy.subtract([u*(waypt.y-robot_pos.y) , u*(waypt.x-robot_pos.x)], v_des_obs)
 
