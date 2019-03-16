@@ -41,11 +41,10 @@ def get_desired_setpts(lidarMap, robot_pos, waypt):
     # BETA_0 = handling * exp(-del_phi) + velocity * gamma (tunable)
     # BETA IS ASSIGNED BASED ON GENERAL ATTRACTIVNESS OF TERRAIN
 
-    phi_des = math.atan2( v_des[1] , v_des[0])
+    phi_des = math.atan2( v_des[1] , v_des[0]) * 180 / math.pi + 180
     vel_des = 200
 
     # Find the terrain type in phi_des
-
     return [phi_des, vel_des]
 
 
@@ -63,14 +62,14 @@ if __name__=="__main__":
     # Euclidean distance to waypoint
     dist_way = math.sqrt( (way_pos.x - rov_state.pose.position.x)**2 + (way_pos.y - rov_state.pose.position.y)**2 +(way_pos.z - rov_state.pose.position.z)**2 )
 
-    while dist_way <= 0.1:
+    while dist_way >= 0.1:
         # Update robot state
         rov_state.pose.setPoseTup(rov.getLocation(), rov.getRoll(), rov.getPitch(), rov.getYaw())
         rov_state.heading = rov.getCurrentHeading()
         rov_state.acceleration.setAccelTup(rov.getAcceleration())
         rov_state.velocity.setVelTup(rov.getVelocity())
 
-        print("Robot Heading ", rov_state.heading, " Robot Vel ", rov_state.velocity)
+        print("Robot Heading ", rov_state.heading, " Robot Vel ", rov_state.velocity.x)
 
         # Populate LIDAR map
 
@@ -88,10 +87,10 @@ if __name__=="__main__":
         if lidar_left.lidar_hit_object(lidar_dst[0]):
             lidar_pts_pos[0] = find_lidar_point(R, -30, lidar_dst[0])
 
-        if lidar_left.lidar_hit_object(lidar_dst[0]):
+        if lidar_center.lidar_hit_object(lidar_dst[1]):
             lidar_pts_pos[1] = find_lidar_point(R, 0, lidar_dst[1])
 
-        if lidar_left.lidar_hit_object(lidar_dst[0]):
+        if lidar_right.lidar_hit_object(lidar_dst[2]):
             lidar_pts_pos[2] = find_lidar_point(R, 30, lidar_dst[2])
 
         lidarMap.extend(lidar_pts_pos)
