@@ -45,24 +45,26 @@ for item in run9Y:
 print(cnt)
         
 prefix = ['run9', 'run11', 'merged']
-# for i in range(6):
-#     for j in range(len(prefix)):
-#         os.makedirs('data/%s_terrain_dataset/train/%d'%(prefix[j], i))
-#         os.makedirs('data/%s_terrain_dataset/validate/%d'%(prefix[j], i))
-#         os.makedirs('data/%s_terrain_dataset/test/%d'%(prefix[j], i))
+for i in range(6):
+    for j in range(len(prefix)):
+        os.makedirs('data/%s_terrain_dataset_find/train/%d'%(prefix[j], i))
+        os.makedirs('data/%s_terrain_dataset_find/validate/%d'%(prefix[j], i))
+        os.makedirs('data/%s_terrain_dataset_find/test/%d'%(prefix[j], i))
     
 xSet = [run9X, run11X, mergedX]
 ySet = [run9Y, run11Y, mergedY]
 
-# for i in range(len(xSet)):
-#     xt, xtest, yt, ytest = model_selection.train_test_split(xSet[i], ySet[i], test_size=.2, random_state=SEED, stratify=ySet[i])
-#     xtrain, xval, ytrain, yval = model_selection.train_test_split(xt, yt, test_size=.2, random_state=SEED, stratify=yt)
-    # for j in range(len(xtest)):
-    #     copyfile(xtest[j], 'data/%s_terrain_dataset/test/%d/%d.png'%(prefix[i], ytest[j], j))
-    # for j in range(len(xval)):
-    #     copyfile(xval[j], 'data/%s_terrain_dataset/validate/%d/%d.png'%(prefix[i], yval[j], j))
-    # for j in range(len(xtrain)):
-    #     copyfile(xtrain[j], 'data/%s_terrain_dataset/train/%d/%d.png'%(prefix[i], ytrain[j], j))
+for i in range(len(xSet)):
+    xt, xtest, yt, ytest = model_selection.train_test_split(xSet[i], ySet[i], test_size=.2, random_state=SEED, stratify=ySet[i])
+    xtrain, xval, ytrain, yval = model_selection.train_test_split(xt, yt, test_size=.2, random_state=SEED, stratify=yt)
+    for j in range(len(xtest)):
+        copyfile(xtest[j], 'data/%s_terrain_dataset_find/test/%d/%s'%(prefix[i], ytest[j], xtest[j][xtest[j].rfind('/'):]))            
+    for j in range(len(xval)):
+        copyfile(xval[j], 'data/%s_terrain_dataset_find/validate/%d/%s'%(prefix[i], yval[j], xval[j][xval[j].rfind('/'):]))         
+    for j in range(len(xtrain)):
+        copyfile(xtrain[j], 'data/%s_terrain_dataset_find/train/%d/%s'%(prefix[i], ytrain[j], xtrain[j][xtrain[j].rfind('/'):]))    
+    
+            
     
 # cnt = {}
 # for item in yt:

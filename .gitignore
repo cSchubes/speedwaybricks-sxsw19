@@ -1,6 +1,9 @@
 ## CUSTOM
-data/
+/data
 .vscode/
+named_assets.zip
+named_assets/
+adjusted_labels/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
