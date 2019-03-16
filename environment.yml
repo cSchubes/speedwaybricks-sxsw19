@@ -5,6 +5,9 @@ channels:
   - fastai
 dependencies:
   - python==3.6.8
-  - pytorch-cpu==1.0.1
-  - torchvision-cpu==0.2.2
+  - pytorch
+  - torchvision
   - fastai==1.0.34
+  - numpy
+  - opencv
+  - zmq
