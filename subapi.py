@@ -37,7 +37,6 @@ class rover:
         return bool(int(parameters['ManualOverride']))
     def isDeadZone(self):
         global parameters
-        print(parameters)
         return bool(int(parameters['DeadZone']))
     def getSignalStrength(self):
         global parameters

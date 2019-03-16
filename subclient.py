@@ -30,10 +30,10 @@ def client_thread():
         
         
         img_bytes = socket.recv(19200)
-    ##    print(img_bytes)
+        # print(img_bytes)
         img = client.proc(img_bytes)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        #cv2.imshow('aiiioi'+str(cnt%8),img)
+        # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        # cv2.imshow('aiiioi'+str(cnt%8),img)
         #cv2.waitKey(1)
         imgs.append(img)
     return imgs

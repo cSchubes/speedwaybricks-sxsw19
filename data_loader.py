@@ -14,7 +14,8 @@ def parse_lbl(lbl):
 
 def load_img(lbl,extension = '/picOutput/im_1230'):
     im = cv2.imread(extension+lbl[0]+'_'+lbl[1]+'.png')
-    return cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+    # return cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+    return im
 
 def build_dict(num_labels):
     label_dict = {}

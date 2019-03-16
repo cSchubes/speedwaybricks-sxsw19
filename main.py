@@ -1,9 +1,9 @@
 import sys
 import time
+from classifier import Classify
 from timeit import default_timer as timer
 from subapi import rover as roverAPI
 # import rover_mock as rover
-from classifier import Classify
 
 ARTIFACT_PATH='./models'
 
@@ -19,14 +19,13 @@ def main(model='production.pkl'):
             start = timer()
             
             # classify camera images
-            # camera_imgs = rover.getImgs()
-            # camera_preds = []
-            # # may have to convert images here or change classify class
-            # for img in camera_imgs:
-            #     print(timer() - start)
-            #     camera_preds.append(classify.predict(img))
-                
-            
+            camera_imgs = rover.getImgs()
+            print(timer() - start)
+            camera_preds = []
+            # may have to convert images here or change classify class
+            for i in range(len(camera_imgs)):
+                temp_img = camera_imgs[i]
+                camera_preds.append(classify.predict(temp_img))
                 
             # confirm we are onlyhot running at 1Hz
             # and check if we are running over
