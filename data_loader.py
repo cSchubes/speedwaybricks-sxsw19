@@ -13,7 +13,8 @@ def parse_lbl(lbl):
     return img_no,cam_no,img_mat
 
 def load_img(lbl,extension = '/picOutput/im_1230'):
-    return cv2.imread(extension+lbl[0]+'_'+lbl[1]+'.png')
+    im = cv2.imread(extension+lbl[0]+'_'+lbl[1]+'.png')
+    return cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 
 def build_dict(num_labels):
     label_dict = {}
@@ -42,9 +43,10 @@ def load_all(run_no,mode = 0):
     if mode:
         np.save('numpy_saved',[imgs,lbls])
         
-    return label_dict
+    return imgs, lbls, label_dict
     
 # imgs, labels, label_dict = load_all(9)
+# print(imgs)
 #print(imgs)
 #print(labels)
 # label_dict = load_all(9)
