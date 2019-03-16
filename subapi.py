@@ -9,8 +9,7 @@ from threading import Thread
 parameters = {}
 def update_params(socket):
     global parameters
-    while True:
-        parameters = ast.literal_eval(socket.recv_string())
+    parameters = ast.literal_eval(socket.recv_string())
     
 class rover:
     def __init__(self):
@@ -26,47 +25,58 @@ class rover:
         self.port_conn = '2509'
         self.lines = lines
         #self.socket2.bind(('0.0.0.0',2505))
-        param_thread = Thread(target = update_params,args = (self.socket,))
-        param_thread.start()
-        time.sleep(1)
+        update_params(self.socket)
+        
         
 
         
     def isOverride(self):
         global parameters
+        update_params(self.socket)
         return bool(int(parameters['ManualOverride']))
     def isDeadZone(self):
         global parameters
+        update_params(self.socket)
         return bool(int(parameters['DeadZone']))
     def getSignalStrength(self):
         global parameters
+        update_params(self.socket)
         return parameters['SignalStrength']
     def getLIDARS(self):
         global parameters
+        update_params(self.socket)
         return parameters['LIDAR1'],parameters['LIDAR2'],parameters['LIDAR3']
     def getVelocity(self):
         global parameters
+        update_params(self.socket)
         return parameters['VelocityX'],parameters['VelocityY'],parameters['VelocityZ']
     def getWaypoint(self):
         global parameters
+        update_params(self.socket)
         return parameters['WaypointX'],parameters['WaypointY'],parameters['WaypointZ']
     def getCurrentHeading(self):
         global parameters
+        update_params(self.socket)
         return parameters['CurrentHeading']
     def getLocation(self):
         global parameters
+        update_params(self.socket)
         return parameters['LocationX'],parameters['LocationY'],parameters['LocationZ']
     def getRoll(self):
         global parameters
+        update_params(self.socket)
         return parameters['Roll']
     def getPitch(self):
         global parameters
+        update_params(self.socket)
         return parameters['Pitch']
     def getYaw(self):
         global parameters
+        update_params(self.socket)
         return parameters['Yaw']
     def getAcceleration(self):
         global parameters
+        update_params(self.socket)
         return parameters['AccelerationX'],parameters['AccelerationY'],parameters['AccelerationZ']
     def setTgtSpeed(self,tgt_speed):
         self.socket2 = socket.socket(socket.AF_INET,socket.SOCK_STREAM)

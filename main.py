@@ -20,12 +20,10 @@ def main(model='production.pkl'):
             
             # classify camera images
             camera_imgs = rover.getImgs()
-            print(timer() - start)
             camera_preds = []
             # may have to convert images here or change classify class
-            for i in range(len(camera_imgs)):
-                temp_img = camera_imgs[i]
-                camera_preds.append(classify.predict(temp_img))
+            for img in camera_imgs:
+                camera_preds.append(classify.predict(img))
                 
             # confirm we are onlyhot running at 1Hz
             # and check if we are running over
