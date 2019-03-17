@@ -1,18 +1,18 @@
 import numpy
 import math
 
-def find_robot_transform(robot_pos, robot_or):
+def find_robot_transform(robot_state):
     # robot_pos = [x, y, z], in meters in the globabl frame
     # robot_or = [roll, pitch, yaw] in degrees in globabl framw
     # returns a 4x4 array - the homogenous transformation matrix
 
-    roll = math.radians(robot_or.r)
-    pitch = math.radians(robot_or.p)
-    yaw = math.radians(robot_or.y)
+    roll = math.radians(robot_state.orientation[0])
+    pitch = math.radians(robot_state.orientation[1])
+    yaw = math.radians(robot_state.orientation[2])
 
-    R = numpy.array([[math.cos(yaw)*math.cos(pitch), math.cos(yaw)*math.sin(pitch)*math.sin(roll) - math.sin(yaw)*math.cos(roll), math.cos(yaw)*math.sin(pitch)*math.cos(roll) + math.sin(yaw)*math.sin(roll), robot_pos[0]],
-                     [math.sin(yaw)*math.cos(pitch), math.sin(yaw)*math.sin(pitch)*math.sin(roll) + math.cos(yaw)*math.cos(roll), math.sin(yaw)*math.sin(pitch)*math.cos(roll) - math.cos(yaw)*math.sin(roll), robot_pos[1]],
-                     [-1*math.sin(pitch), math.cos(pitch)*math.sin(roll), math.cos(pitch)*math.cos(roll), robot_pos[2]],
+    R = numpy.array([[math.cos(yaw)*math.cos(pitch), math.cos(yaw)*math.sin(pitch)*math.sin(roll) - math.sin(yaw)*math.cos(roll), math.cos(yaw)*math.sin(pitch)*math.cos(roll) + math.sin(yaw)*math.sin(roll), robot_state.location[0]],
+                     [math.sin(yaw)*math.cos(pitch), math.sin(yaw)*math.sin(pitch)*math.sin(roll) + math.cos(yaw)*math.cos(roll), math.sin(yaw)*math.sin(pitch)*math.cos(roll) - math.cos(yaw)*math.sin(roll), robot_state.location[1]],
+                     [-1*math.sin(pitch), math.cos(pitch)*math.sin(roll), math.cos(pitch)*math.cos(roll), robot_state.location[2]],
                      [0, 0, 0, 1]])
 
     return R

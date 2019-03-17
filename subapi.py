@@ -24,13 +24,16 @@ class rover:
         self.lines = lines
         #self.socket2.bind(('0.0.0.0',2505))
         
-        self.params = update_params(self.socket)
-        
-        time.sleep(1) 
-
+        self.params = ast.literal_eval(self.socket.recv_string())
         
     def update(self):
-        self.params = update_params(self.socket)
+        # remake socket
+        context = zmq.Context()
+        socket = context.socket(zmq.SUB)
+        socket.connect ('tcp://'+self.lines[0]+':2510')
+        socket.setsockopt_string(zmq.SUBSCRIBE, '')
+        # update params
+        self.params = ast.literal_eval(socket.recv_string())
 
     def isOverride(self):
         return bool(int(self.params['ManualOverride']))
