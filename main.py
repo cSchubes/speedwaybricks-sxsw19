@@ -27,7 +27,11 @@ def main(model='production.pkl'):
     rover.setTgtSpeed(0)
     
     time.sleep(5)
-    
+
+    left_lidar_tracker = LidarTracker()
+    middle_lidar_tracker = LidarTracker()
+    right_lidar_tracker = LidarTracker()
+
     loc = rover.getLocation()
     waypoint = (loc[0] + 5000, loc[1] + 5000)
     # waypoint = rover.getWaypoint()
@@ -46,21 +50,31 @@ def main(model='production.pkl'):
         spd = 0
         max_turn = 30
 
+        delta_H = ang - STATE.heading
+        if(delta_H <= -180):
+            delta_H += 360
+        elif(delta_H > 180):
+            delta_H -= 360
+
         if abs(ang - STATE.heading) > 45:
             spd = 400
             rover.setTgtSpeed(spd)
-            dH = max(-max_turn, min((ang - STATE.heading),max_turn))
+            dH = max(-max_turn, min(delta_H,max_turn))
         elif abs(ang - STATE.heading) > 10:
             spd = 400
             rover.setTgtSpeed(spd)
-            dH = max(-max_turn, min((ang - STATE.heading),max_turn))
+            dH = max(-max_turn, min(delta_H,max_turn))
         else:
             spd = 400
             rover.setTgtSpeed(spd)
-            dH = -1 * max(-max_turn, min((ang - STATE.heading),max_turn))
+            dH = -1 * max(-max_turn, min(delta_H,max_turn))
 
         ## OBSTACLE CORRECTION ##
-        dH += oa.obstacleCorrection(rover.getLIDARS())
+        lidar_points = rover.getLIDARS()
+        if(not left_lidar_tracker.lidar_hit_object()): lidar_points[0] = 1000000
+        if(not middle_lidar_tracker.lidar_hit_object()): lidar_points[1] = 1000000
+        if(not right_lidar_tracker.lidar_hit_object()): lidar_points[2] = 1000000
+        dH += oa.obstacleCorrection(lidar_points)
         rover.setTgtHeading(STATE.heading + dH)
         # print(dH, dist, spd)
 
