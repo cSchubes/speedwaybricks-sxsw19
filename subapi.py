@@ -5,11 +5,9 @@ import socket
 import time
 import subclient
 import cv2
-from threading import Thread
-parameters = {}
+
 def update_params(socket):
-    global parameters
-    parameters = ast.literal_eval(socket.recv_string())
+    return ast.literal_eval(socket.recv_string())
     
 class rover:
     def __init__(self):
@@ -25,59 +23,40 @@ class rover:
         self.port_conn = '2509'
         self.lines = lines
         #self.socket2.bind(('0.0.0.0',2505))
-        update_params(self.socket)
         
+        self.params = update_params(self.socket)
         
+        time.sleep(1) 
 
         
+    def update(self):
+        self.params = update_params(self.socket)
+
     def isOverride(self):
-        global parameters
-        update_params(self.socket)
-        return bool(int(parameters['ManualOverride']))
+        return bool(int(self.params['ManualOverride']))
     def isDeadZone(self):
-        global parameters
-        update_params(self.socket)
-        return bool(int(parameters['DeadZone']))
+        return bool(int(self.params['DeadZone']))
     def getSignalStrength(self):
-        global parameters
-        update_params(self.socket)
-        return parameters['SignalStrength']
+        return self.params['SignalStrength']
     def getLIDARS(self):
-        global parameters
-        update_params(self.socket)
-        return parameters['LIDAR1'],parameters['LIDAR2'],parameters['LIDAR3']
+        return self.params['LIDAR1'],self.params['LIDAR2'],self.params['LIDAR3']
     def getVelocity(self):
-        global parameters
-        update_params(self.socket)
-        return parameters['VelocityX'],parameters['VelocityY'],parameters['VelocityZ']
+        return self.params['VelocityX'],self.params['VelocityY'],self.params['VelocityZ']
     def getWaypoint(self):
-        global parameters
-        update_params(self.socket)
-        return parameters['WaypointX'],parameters['WaypointY'],parameters['WaypointZ']
+        return self.params['WaypointX'],self.params['WaypointY'],self.params['WaypointZ']
     def getCurrentHeading(self):
-        global parameters
-        update_params(self.socket)
-        return parameters['CurrentHeading']
+        return self.params['CurrentHeading']
     def getLocation(self):
-        global parameters
-        update_params(self.socket)
-        return parameters['LocationX'],parameters['LocationY'],parameters['LocationZ']
+        return self.params['LocationX'],self.params['LocationY'],self.params['LocationZ']
     def getRoll(self):
-        global parameters
-        update_params(self.socket)
-        return parameters['Roll']
+        return self.params['Roll']
     def getPitch(self):
-        global parameters
-        update_params(self.socket)
-        return parameters['Pitch']
+        return self.params['Pitch']
     def getYaw(self):
-        global parameters
-        update_params(self.socket)
-        return parameters['Yaw']
+        return self.params['Yaw']
     def getAcceleration(self):
-        global parameters
-        update_params(self.socket)
-        return parameters['AccelerationX'],parameters['AccelerationY'],parameters['AccelerationZ']
+        return self.params['AccelerationX'],self.params['AccelerationY'],self.params['AccelerationZ']
+        
     def setTgtSpeed(self,tgt_speed):
         self.socket2 = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.socket2.connect ((self.lines[0],int(self.port_conn)))
@@ -123,15 +102,10 @@ class rover:
     def getImgs(self):
         return subclient.client_thread()
         
-        
-        
 if __name__=="__main__":
     rover_obj = rover()
     i=0
     
     while True:
-        
             pass
-        
-        
         

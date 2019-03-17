@@ -2,7 +2,9 @@ import sys
 import time
 from timeit import default_timer as timer
 # api
-from subapi import rover as RoverAPI
+# from subapi import rover as RoverAPI
+import rover_mock as rover
+from subapiTest import rover as RoverAPI
 # custom imports
 from rover_lib import *
 from parameters import deadzone_params
@@ -35,16 +37,19 @@ def get_state(rover: RoverAPI):
 
 def main(model='production.pkl'):
     # setup
-    rover = RoverAPI()
+    # rover = RoverAPI()
     classify = Classify(ARTIFACT_PATH, model)
     DeadZoneController = None 
+    rov = RoverAPI()
 
     while True:
         # run this guy at 1Hz
         start = timer()
+        rov.update()
+        print(rov.test())
 
         ## GET STATE ##
-        STATE = get_state()
+        # STATE = get_state()
         
         ## CLASSIFY ##
         camera_imgs = rover.getImgs()
@@ -54,25 +59,25 @@ def main(model='production.pkl'):
             camera_preds.append(classify.predict(img))
         
         ## WAYPOINT 2 WAYPOINT ##
-        if not rover.isDeadZone():
-            # check for leaving dead zone
-            if DeadZoneController is not None:
-                DeadZoneController = None
+        # if not rover.isDeadZone():
+        #     # check for leaving dead zone
+        #     if DeadZoneController is not None:
+        #         DeadZoneController = None
             
-            if not rover.isOverride():
-                waypoint = rover.getWaypoint()
-                print(waypoint)
-                ### STUFF ###
+        #     if not rover.isOverride():
+        #         waypoint = rover.getWaypoint()
+        #         print(waypoint)
+        #         ### STUFF ###
                     
-        ## INSIDE DEADZONE ##
-        else:
-            signal_strength = rover.getSignalStrength()
-            # check for entering deadzone
-            if DeadZoneController is None:
-                DeadZoneController = GradientDescent(signal_strength, 
-                                                    STATE, deadzone_params)
-                # rover.setWaypoint(-1, -1, -1)
-            heading = DeadZoneController.get_next_step(STATE, signal_strength)
+        # ## INSIDE DEADZONE ##
+        # else:
+        #     signal_strength = rover.getSignalStrength()
+        #     # check for entering deadzone
+        #     if DeadZoneController is None:
+        #         DeadZoneController = GradientDescent(signal_strength, 
+        #                                             STATE, deadzone_params)
+        #         # rover.setWaypoint(-1, -1, -1)
+        #     heading = DeadZoneController.get_next_step(STATE, signal_strength)
             ## STUFF
             
         # confirm we are running at 1Hz
