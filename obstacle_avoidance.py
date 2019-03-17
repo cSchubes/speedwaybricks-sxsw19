@@ -32,7 +32,7 @@ def obstacleCorrection(lidarPts, leftTerrain=-1, rightTerrain=-1):
 				del_phi = - min(right_range/right, right_max)
 			
 	else:
-		print "No valuable lidar data"
+		print("No valuable lidar data")
 		del_phi = 0
 
 	return del_phi
