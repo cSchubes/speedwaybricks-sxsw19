@@ -5,7 +5,7 @@ def obstacleCorrection(lidarPts, leftTerrain=-1, rightTerrain=-1):
 
 	del_phi_to_terrain = { '-1':'5', '0':'3', '1':'5', '2':'5', '3':'10', '4':'10', '5':'3' }
 
-	if left <= 2000 || center <= 2000 || right <= 2000:
+	if left <= 2000 or center <= 2000 or right <= 2000:
 		minLidar = min(lidarPts)
 		minLidarType = lidarPts.index(minLidar)
 
@@ -17,8 +17,8 @@ def obstacleCorrection(lidarPts, leftTerrain=-1, rightTerrain=-1):
 			# GO LEFT IF OBSTACLE DEAD AHEAD
 			del_phi = int(del_phi_to_terrain[str(leftTerrain)])
 	else:
-		print "No valuable lidar data"
-		pass
+		print("No valuable lidar data")
+		del_phi = 0
 
 	return del_phi
 
