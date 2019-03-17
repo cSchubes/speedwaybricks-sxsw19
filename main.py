@@ -12,6 +12,7 @@ from classifier import Classify
 from deadzone import GradientDescent
 import obstacle_avoidance as oa
 from get_lidar_point import *
+from object_registry import ObjectRegistry
 
 ARTIFACT_PATH='./models'
     
@@ -22,9 +23,14 @@ def get_state(rover: RoverAPI):
 def main(model='production.pkl'):
     # setup
     rover = RoverAPI()
+    # registry = ObjectRegistry()
     classify = Classify(ARTIFACT_PATH, model)
     DeadZoneController = None 
     classify_counter = 0
+    vel_counter = 0
+    vel_buff = []
+    avoid_obstacle = 0
+    obs_timer = timer()
     
     # initial state
     rover.setTurnErr(0)
@@ -96,26 +102,57 @@ def main(model='production.pkl'):
             dH = -1 * max(-max_turn, min(delta_H,max_turn))
 
         ## OBSTACLE CORRECTION ##
-        lidar_points = list(rover.getLIDARS())
-        if(not left_lidar_tracker.lidar_hit_object(lidar_points[0])):
-            lidar_points[0] = 1000000
-        if(not middle_lidar_tracker.lidar_hit_object(lidar_points[1])):
-            lidar_points[1] = 1000000
-        else:
-            print(STATE.location[0], STATE.location[1], STATE.location[2])
-            obs_loc = location()
-            obs_loc.setLocTup(find_lidar_point(find_robot_transform(STATE), 0, lidar_points[1]))
-            print(obs_loc.x, obs_loc.y, obs_loc.z)
-        if(not right_lidar_tracker.lidar_hit_object(lidar_points[2])):
-            lidar_points[2] = 1000000
+        # lidar_points = list(rover.getLIDARS())
+        # if(left_lidar_tracker.lidar_hit_object(lidar_points[0])):
+        #     obs_loc = location()
+        #     obs_loc.setLocTup(find_lidar_point(find_robot_transform(STATE), 0, lidar_points[0]))
+        #     registry.add((obs_loc.x, obs_loc.y, obs_loc.z))
+        # if(middle_lidar_tracker.lidar_hit_object(lidar_points[1])):
+        #     obs_loc = location()
+        #     obs_loc.setLocTup(find_lidar_point(find_robot_transform(STATE), 0, lidar_points[1]))
+        #     registry.add((obs_loc.x, obs_loc.y, obs_loc.z))
+        # if(right_lidar_tracker.lidar_hit_object(lidar_points[2])):
+        #     obs_loc = location()
+        #     obs_loc.setLocTup(find_lidar_point(find_robot_transform(STATE), 0, lidar_points[2]))
+        #     registry.add((obs_loc.x, obs_loc.y, obs_loc.z))
+            
+        # print(lidar_points)    
+
+        # if(not left_lidar_tracker.lidar_hit_object(lidar_points[0])): lidar_points[0] = 1000000
+        # if(not middle_lidar_tracker.lidar_hit_object(lidar_points[1])): lidar_points[1] = 1000000
+        # if(not right_lidar_tracker.lidar_hit_object(lidar_points[2])): lidar_points[2] = 1000000
+        
+        # print(lidar_points)
+
         # d = oa.obstacleCorrection(lidar_points, leftTerrain, rightTerrain)
-        d = oa.obstacleCorrection(lidar_points)
-        dH += d
-        rover.setTgtHeading(STATE.heading + dH)
+        # d = oa.obstacleCorrection(lidar_points)
+        # dH += d
+        # safe_heading = registry.determine_safe_heading(dH, STATE.location)
+        # print(dH)
+        # print(safe_heading)
+        
+        vel = rover.getVelocity()
+        if len(vel_buff) == 3:
+            vel_buff[vel_counter%3] = sum([abs(num) for num in list(vel)])
+            if timer() - obs_timer > 10:
+                avoid_obstacle = 0
+            if sum(vel_buff) / 3 < 10:
+                avoid_obstacle += 1
+        else:
+            vel_buff.append(sum([abs(num) for num in list(vel)]))
+
+        if avoid_obstacle == 0:
+            rover.setTgtHeading(dH)
+        else:
+            obs_timer = timer()
+            rover.setTgtHeading(dH+180)
+            rover.setTgtSpeed(400)
+            time.sleep(avoid_obstacle)
+        # rover.setTgtHeading(STATE.heading + dH)
         # print(dH, dist)
         # print('D--%d'%d)
         # print(lidar_points)
-
+        # print(registry.purge(STATE.location, waypoint))
         if dist < 1000:
             rov.setTgtSpeed(0)
             break
@@ -148,6 +185,7 @@ def main(model='production.pkl'):
         print(timer() - start)
         print('--------------')
         classify_counter += 1
+        vel_counter += 1
         while timer() - start < 0.25:
             pass
 
