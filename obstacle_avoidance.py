@@ -12,9 +12,10 @@ def obstacleCorrection(lidarPts, leftTerrain=-1, rightTerrain=-1):
 		if minLidarType == "left":
 			del_phi = int(del_phi_to_terrain[str(leftTerrain)])
 		elif minLidarType == "right":
-			del_phi = int(del_phi_to_terrain[str(rightTerrain)])
+			del_phi = - int(del_phi_to_terrain[str(rightTerrain)])
 		else:
-			del_phi = 0
+			# GO LEFT IF OBSTACLE DEAD AHEAD
+			del_phi = int(del_phi_to_terrain[str(leftTerrain)])
 	else:
 		print "No valuable lidar data"
 		pass
