@@ -23,10 +23,21 @@ def get_state(rover: RoverAPI):
 def main(model='production.pkl'):
     # setup
     rover = RoverAPI()
+<<<<<<< HEAD
     registry = ObjectRegistry()
     classify = Classify(ARTIFACT_PATH, model)
     DeadZoneController = None 
     classify_counter = 0
+=======
+    # registry = ObjectRegistry()
+    classify = Classify(ARTIFACT_PATH, model)
+    DeadZoneController = None 
+    classify_counter = 0
+    vel_counter = 0
+    vel_buff = []
+    avoid_obstacle = 0
+    obs_timer = timer()
+>>>>>>> 2f65c69cdf5c53c96f96cf158b47dcd4a11b2b1c
     
     # initial state
     rover.setTurnErr(0)
@@ -98,6 +109,7 @@ def main(model='production.pkl'):
             dH = -1 * max(-max_turn, min(delta_H,max_turn))
 
         ## OBSTACLE CORRECTION ##
+<<<<<<< HEAD
         lidar_points = list(rover.getLIDARS())
         if(left_lidar_tracker.lidar_hit_object(lidar_points[0])):
             obs_loc = location()
@@ -122,6 +134,59 @@ def main(model='production.pkl'):
         # print('D--%d'%d)
         # print(lidar_points)
         print(registry.purge(STATE.location, waypoint))
+=======
+        # lidar_points = list(rover.getLIDARS())
+        # if(left_lidar_tracker.lidar_hit_object(lidar_points[0])):
+        #     obs_loc = location()
+        #     obs_loc.setLocTup(find_lidar_point(find_robot_transform(STATE), 0, lidar_points[0]))
+        #     registry.add((obs_loc.x, obs_loc.y, obs_loc.z))
+        # if(middle_lidar_tracker.lidar_hit_object(lidar_points[1])):
+        #     obs_loc = location()
+        #     obs_loc.setLocTup(find_lidar_point(find_robot_transform(STATE), 0, lidar_points[1]))
+        #     registry.add((obs_loc.x, obs_loc.y, obs_loc.z))
+        # if(right_lidar_tracker.lidar_hit_object(lidar_points[2])):
+        #     obs_loc = location()
+        #     obs_loc.setLocTup(find_lidar_point(find_robot_transform(STATE), 0, lidar_points[2]))
+        #     registry.add((obs_loc.x, obs_loc.y, obs_loc.z))
+            
+        # print(lidar_points)    
+
+        # if(not left_lidar_tracker.lidar_hit_object(lidar_points[0])): lidar_points[0] = 1000000
+        # if(not middle_lidar_tracker.lidar_hit_object(lidar_points[1])): lidar_points[1] = 1000000
+        # if(not right_lidar_tracker.lidar_hit_object(lidar_points[2])): lidar_points[2] = 1000000
+        
+        # print(lidar_points)
+
+        # d = oa.obstacleCorrection(lidar_points, leftTerrain, rightTerrain)
+        # d = oa.obstacleCorrection(lidar_points)
+        # dH += d
+        # safe_heading = registry.determine_safe_heading(dH, STATE.location)
+        # print(dH)
+        # print(safe_heading)
+        
+        vel = rover.getVelocity()
+        if len(vel_buff) == 3:
+            vel_buff[vel_counter%3] = sum([abs(num) for num in list(vel)])
+            if timer() - obs_timer > 10:
+                avoid_obstacle = 0
+            if sum(vel_buff) / 3 < 10:
+                avoid_obstacle += 1
+        else:
+            vel_buff.append(sum([abs(num) for num in list(vel)]))
+
+        if avoid_obstacle == 0:
+            rover.setTgtHeading(dH)
+        else:
+            obs_timer = timer()
+            rover.setTgtHeading(dH+180)
+            rover.setTgtSpeed(400)
+            time.sleep(avoid_obstacle)
+        # rover.setTgtHeading(STATE.heading + dH)
+        # print(dH, dist)
+        # print('D--%d'%d)
+        # print(lidar_points)
+        # print(registry.purge(STATE.location, waypoint))
+>>>>>>> 2f65c69cdf5c53c96f96cf158b47dcd4a11b2b1c
         if dist < 1000:
             rov.setTgtSpeed(0)
             break
@@ -154,6 +219,10 @@ def main(model='production.pkl'):
         print(timer() - start)
         print('--------------')
         classify_counter += 1
+<<<<<<< HEAD
+=======
+        vel_counter += 1
+>>>>>>> 2f65c69cdf5c53c96f96cf158b47dcd4a11b2b1c
         while timer() - start < 0.25:
             pass
 
