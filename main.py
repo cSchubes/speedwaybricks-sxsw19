@@ -51,18 +51,24 @@ def main(model='production.pkl'):
         spd = 0
         max_turn = 30
 
+        delta_H = ang - STATE.heading
+        if(delta_H <= -180):
+            delta_H += 360
+        elif(delta_H > 180):
+            delta_H -= 360
+
         if abs(ang - STATE.heading) > 45:
             spd = 400
             rover.setTgtSpeed(spd)
-            dH = max(-max_turn, min((ang - STATE.heading),max_turn))
+            dH = max(-max_turn, min(delta_H,max_turn))
         elif abs(ang - STATE.heading) > 10:
             spd = 400
             rover.setTgtSpeed(spd)
-            dH = max(-max_turn, min((ang - STATE.heading),max_turn))
+            dH = max(-max_turn, min(delta_H,max_turn))
         else:
             spd = 400
             rover.setTgtSpeed(spd)
-            dH = -1 * max(-max_turn, min((ang - STATE.heading),max_turn))
+            dH = -1 * max(-max_turn, min(delta_H,max_turn))
 
         ## OBSTACLE CORRECTION ##
         lidar_points = rover.getLIDARS()
