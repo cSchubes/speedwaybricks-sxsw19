@@ -85,14 +85,10 @@ class robot_command:
     stop = bool()
     start = bool()
 
-class robot_state:
-    pose = poser(0,0,0,0,0,0)
-    velocity = velocity_vect()
-    acceleration = acceleration_vect()
-    heading = float()
-
-    def __init__(self, pos):
-        self.pose = pos
+class RobotState:
+    def __init__(self, location, heading):
+        self.location = location
+        self.heading = heading
 
 def relative_heading(loc1, loc2):
     # Programmed to provide the relative heading vector from location 1 to location 2 where turning left is 0 -> -180 and right is 0 -> +180
