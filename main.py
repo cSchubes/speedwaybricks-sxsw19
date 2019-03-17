@@ -3,18 +3,17 @@ import time
 import math
 from timeit import default_timer as timer
 # api
-# from subapi import rover as RoverAPI
-import rover_mock as rover
-from subapiTest import rover as RoverAPI
+from subapi2 import rover as RoverAPI
+# import rover_mock as rover
+# from subapiTest import rover as RoverAPI
 # custom imports
 from rover_lib import *
 from parameters import deadzone_params
 from classifier import Classify
-from deadzone import GradientDescent
+# from deadzone import GradientDescent
 import obstacle_avoidance as oa
 
 ARTIFACT_PATH='./models'
-def hey_driver():
     
 def get_state(rover: RoverAPI):
     state = RobotState(rover.getLocation(), rover.getCurrentHeading())
@@ -23,7 +22,7 @@ def get_state(rover: RoverAPI):
 def main(model='production.pkl'):
     # setup
     rover = RoverAPI()
-    classify = Classify(ARTIFACT_PATH, model)
+    # classify = Classify(ARTIFACT_PATH, model)
     DeadZoneController = None 
     # rov = RoverAPI()
     rover.setTurnErr(0)
@@ -39,7 +38,7 @@ def main(model='production.pkl'):
         start = timer()
 
         ## GET STATE ##
-        STATE = get_state()
+        STATE = get_state(rover)
         dx = (waypoint[0] - STATE.location[0])
         dy = (waypoint[1] - STATE.location[1])
         dist = math.sqrt(dx*dx + dy*dy)
