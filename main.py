@@ -3,14 +3,12 @@ import time
 import math
 from timeit import default_timer as timer
 # api
-from subapi2 import rover as RoverAPI
-# import rover_mock as rover
-# from subapiTest import rover as RoverAPI
+from subapi import rover as RoverAPI
 # custom imports
 from rover_lib import *
 from parameters import deadzone_params
 from classifier import Classify
-# from deadzone import GradientDescent
+from deadzone import GradientDescent
 import obstacle_avoidance as oa
 
 ARTIFACT_PATH='./models'
@@ -22,14 +20,14 @@ def get_state(rover: RoverAPI):
 def main(model='production.pkl'):
     # setup
     rover = RoverAPI()
-    # classify = Classify(ARTIFACT_PATH, model)
+    classify = Classify(ARTIFACT_PATH, model)
     DeadZoneController = None 
-    # rov = RoverAPI()
     rover.setTurnErr(0)
     rover.setTgtHeading(0)
     rover.setTgtSpeed(0)
+    
     time.sleep(5)
-
+    
     loc = rover.getLocation()
     waypoint = (loc[0] + 5000, loc[1] + 5000)
     # waypoint = rover.getWaypoint()
@@ -38,6 +36,7 @@ def main(model='production.pkl'):
         start = timer()
 
         ## GET STATE ##
+        rover.update()
         STATE = get_state(rover)
         dx = (waypoint[0] - STATE.location[0])
         dy = (waypoint[1] - STATE.location[1])
@@ -63,19 +62,19 @@ def main(model='production.pkl'):
         ## OBSTACLE CORRECTION ##
         dH += oa.obstacleCorrection(rover.getLIDARS())
         rover.setTgtHeading(STATE.heading + dH)
-        print(dH, dist, spd)
+        # print(dH, dist, spd)
 
         if dist < 1000:
             rov.setTgtSpeed(0)
             break
 
-        ## CLASSIFY ##
-        # camera_imgs = rover.getImgs()
-        # camera_preds = []
-        # # may have to convert images here or change classify class
-        # for img in camera_imgs:
-        #     camera_preds.append(classify.predict(img))
-        
+        # CLASSIFY ##
+        camera_imgs = rover.getImgs()
+        camera_preds = []
+        # may have to convert images here or change classify class
+        for img in camera_imgs:
+            camera_preds.append(classify.predict(img))
+            
         ## WAYPOINT 2 WAYPOINT ##
         # if not rover.isDeadZone():
         #     # check for leaving dead zone
@@ -101,7 +100,7 @@ def main(model='production.pkl'):
         # confirm we are running at 1Hz
         # and check if we are running over
         print(timer() - start)
-        while timer() - start < 0.25:
+        while timer() - start < 0.5:
             pass
 
 if __name__=='__main__':
