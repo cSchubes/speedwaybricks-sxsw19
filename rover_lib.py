@@ -95,9 +95,10 @@ class robot_state:
         self.pose = pos
 
 class RobotState:
-    def __init__(self, location, heading):
+    def __init__(self, location, heading, roll, pitch, yaw):
         self.location = location
         self.heading = heading
+        self.orientation = (roll, pitch, yaw)
 
 def relative_heading(loc1, loc2):
     # Programmed to provide the relative heading vector from location 1 to location 2 where turning left is 0 -> -180 and right is 0 -> +180
